@@ -9,7 +9,6 @@ from youtube_search_requests_py2.utils import (
     GetContinuationToken,
     GetVideosData
 )
-from concurrent.futures import Future
 
 class YoutubeSearch:
     """
@@ -119,23 +118,19 @@ class YoutubeSearch:
         else:
             legit_urls = []
             event_shutdown = threading.Event()
-            f = Future()
 
-            def internal_worker(self, f, legit_urls, event_shutdown):
-                f.set_running_or_notify_cancel()
+            def internal_worker(self, legit_urls, event_shutdown):
                 try:
-                    result = self.main(legit_urls, event_shutdown)
-                    f.set_result(result)
-                except Exception as e:
-                    f.set_exception(e)
+                    self.main(legit_urls, event_shutdown)
+                except Exception:
+                    pass
 
-            worker = threading.Thread(target=internal_worker, name='worker_youtube_search_requests', args=(self, f, legit_urls, event_shutdown))
+            worker = threading.Thread(target=internal_worker, name='worker_youtube_search_requests', args=(self, legit_urls, event_shutdown))
             worker.start()
             event_shutdown.wait(timeout)
             event_shutdown.set()
-            exception = f.exception()
-            if exception:
-                raise exception
+            # for now, i don't know how to set exception on Future
+            # Because concurrent.futures module is not exist in python 2
             return legit_urls
 
     def search(self):
