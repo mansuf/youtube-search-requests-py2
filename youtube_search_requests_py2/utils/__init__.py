@@ -132,6 +132,8 @@ class SearchRelatedVideos:
             dict_data = self._wrap_dict_related_videos(data)
         except JSONDecodeError:
             return None
+        except ValueError:
+            return None
         try:
             return self._get_related_videos(dict_data)
         except KeyError:
