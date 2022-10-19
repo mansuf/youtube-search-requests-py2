@@ -1,3 +1,7 @@
+# Note: Abandoned project
+
+This repository no longer receives updates (bug fixes or new features). If you still wanna maintain it, please fork this repository. Thank you.
+
 # youtube-search-requests-py2
 ### Search Youtube videos using python requests without Youtube API.
 
